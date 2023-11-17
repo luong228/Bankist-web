@@ -10,21 +10,44 @@ const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const header = document.querySelector('.header')
 const btnScrollTo =  document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1')
-btnScrollTo.addEventListener('click', (e) => {
-  const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords);
-  console.log(e.target.getBoundingClientRect());
+const headerTitle = document.querySelector('.header__title');
 
-  console.log('Current scroll (X/Y)', window.scrollX, window.scrollY);
-  console.log('height/width viewport', document.documentElement.clientHeight, document.documentElement.clientWidth);
+//Page navigation - Problem with forEach
+// document.querySelectorAll('.nav__link').forEach(el => {
+//   el.addEventListener('click', function(e) {
+//     e.preventDefault();
+//     const id = this.getAttribute('href');
+//     document.querySelector(id).scrollIntoView({behavior: 'smooth'})
+//   })
+// })
+// btnScrollTo.addEventListener('click', (e) => {
+//   // const s1coords = section1.getBoundingClientRect();
+//   // console.log(s1coords);
+//   // console.log(e.target.getBoundingClientRect());
 
-  // window.scroll({
-  //   left: s1coords.left + window.scrollX,
-  //   top: s1coords.top + window.scrollY,
-  //   behavior: 'smooth'
-  // })
-  section1.scrollIntoView({behavior: 'smooth'})
+//   // console.log('Current scroll (X/Y)', window.scrollX, window.scrollY);
+//   // console.log('height/width viewport', document.documentElement.clientHeight, document.documentElement.clientWidth);
+
+//   // window.scroll({
+//   //   left: s1coords.left + window.scrollX,
+//   //   top: s1coords.top + window.scrollY,
+//   //   behavior: 'smooth'
+//   // })
+//   section1.scrollIntoView({behavior: 'smooth'})
+// })
+
+// Event Delegation Implementing Page Navigation
+document.querySelector('.nav__links').addEventListener('click', function(e) {
+  e.preventDefault();
+
+  //Matching strategy
+  if(e.target.classList.contains('nav__link')) {
+    e.preventDefault();
+        const id = e.target.getAttribute('href');
+        document.querySelector(id).scrollIntoView({behavior: 'smooth'})
+  }
 })
+
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove('hidden');
@@ -55,9 +78,110 @@ header.append(message);
 // delete element
 document.querySelector('.btn--close-cookie').addEventListener('click', () => {
   message.remove();
-  message.parentElement.removeChild(message)
 })
 
 message.style.backgroundColor = '#37383d'
 message.style.height = Number.parseFloat(getComputedStyle(message).height, 10) + 40 + 'px';
  
+
+//Propagation
+// const randomInt = (max, min) => Math.floor(Math.random() * (max - min + 1) + min)
+
+// const randomColor = () => `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+
+// document.querySelector('.nav__link').addEventListener('click', function(e) {
+//   this.style.backgroundColor = randomColor()
+//   console.log('Link', e.target, e.currentTarget);
+//   e.stopPropagation()
+// })
+// document.querySelector('.nav__links').addEventListener('click', function(e) {
+//   this.style.backgroundColor = randomColor()
+//   console.log('Container', e.target, e.currentTarget);
+// })
+
+// document.querySelector('.nav').addEventListener('click', function(e) {
+//   this.style.backgroundColor = randomColor()
+//   console.log('Nav', e.target, e.currentTarget);
+// })
+
+
+
+const lufthansa = {
+  airline: 'Lufthansa',
+  iataCode: 'LH',
+  bookings: [],
+  // book: function() {}
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+    );
+    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
+  },
+};
+
+lufthansa.book(239, 'Jonas Schmedtmann');
+lufthansa.book(635, 'John Smith');
+
+const eurowings = {
+  airline: 'Eurowings',
+  iataCode: 'EW',
+  bookings: [],
+};
+
+const book = lufthansa.book;
+
+// Does NOT work
+// book(23, 'Sarah Williams');
+
+// Call method
+book.call(eurowings, 23, 'Sarah Williams');
+console.log(eurowings);
+
+book.call(lufthansa, 239, 'Mary Cooper');
+console.log(lufthansa);
+
+const swiss = {
+  airline: 'Swiss Air Lines',
+  iataCode: 'LX',
+  bookings: [],
+};
+
+// Apply method
+const flightData = [583, 'George Cooper'];
+book.apply(swiss, flightData);
+console.log(swiss);
+
+book.call(swiss, ...flightData);
+
+///////////////////////////////////////
+// The bind Method
+// book.call(eurowings, 23, 'Sarah Williams');
+
+const bookEW = book.bind(eurowings);
+const bookLH = book.bind(lufthansa);
+const bookLX = book.bind(swiss);
+
+bookEW(23, 'Steven Williams');
+
+const bookEW23 = book.bind(eurowings, 23);
+bookEW23('Jonas Schmedtmann');
+bookEW23('Martha Cooper');
+
+
+const h1 = document.querySelector('h1')
+// Going downwards
+
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+console.log(h1.children);
+h1.firstElementChild.style.color = 'white'
+h1.lastElementChild.style.color = 'white'
+
+console.log(h1.parentElement);
+console.log(h1.parentNode);
+console.log(h1.closest('h1'));
+
+// Queryselector Find children no matter how far - Closest find parent
+
+
+// Table Component
