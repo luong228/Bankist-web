@@ -204,3 +204,22 @@ tabContainer.addEventListener('click', (e) => {
   //Activate Content area
   document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active')
 })
+
+//Menu fade animation
+const handlerOver = function (e) {
+  if(e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img')
+
+    siblings.forEach(el => {
+      if(el != link) el.style.opacity = this;
+    })
+    logo.style.opacity = this;
+  }
+}
+const nav = document.querySelector('.nav');
+//Mouse over instead of mouseenter, because mouse over has bubble - that's we needed
+nav.addEventListener('mouseover', handlerOver.bind(0.5))
+
+nav.addEventListener('mouseout', handlerOver.bind(1))
