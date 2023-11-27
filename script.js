@@ -224,10 +224,41 @@ nav.addEventListener('mouseover', handlerOver.bind(0.5))
 
 nav.addEventListener('mouseout', handlerOver.bind(1))
 // Sticky Navigation
-const initialCoords = section1.getBoundingClientRect()
-console.log(initialCoords);
+// const initialCoords = section1.getBoundingClientRect()
+// console.log(initialCoords);
 
-window.addEventListener('scroll', () => {
-  if(window.scrollY > initialCoords.top) nav.classList.add('sticky')
-   else nav.classList.remove('sticky')
+// window.addEventListener('scroll', () => {
+//   if(window.scrollY > initialCoords.top) nav.classList.add('sticky')
+//    else nav.classList.remove('sticky')
+// })
+
+// const obsCallback = function(entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   })  
+// }
+
+// const obsOptions = {
+//   root: null, // Root is the element that the target is intersecting  
+//   threshold: [0, 0.05] // 0.2 is 20%
+// }
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions)
+// observer.observe(section1)
+
+const navHeight = nav.getBoundingClientRect().height
+
+const stickyNav = function(entries) {
+  const [entry] = entries; // Equal to entry = entries[0]
+  if(!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+
+}
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null, // Root is the element that the target is intersecting 
+  threshold: 0, // 0.2 is 20%, the percentage of element will be intersecting that trigger the callback
+  rootMargin: `-${navHeight}px`// Make sure the nav does not overlap at the beginning,
+  //  trigger before the threshold actually reach by 90pixel
 })
+  
+headerObserver.observe(header)
